@@ -38,7 +38,7 @@ describe Riker::CLI::Command do
       @cmd.instance_variable_get(:@description).should == desc
     end
 
-    it "gets @description with no arguement" do
+    it "gets @description with no argument" do
       desc = "The Holodeck"
       @cmd.instance_variable_set(:@description, desc)
       @cmd.description.should == desc
