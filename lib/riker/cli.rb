@@ -10,20 +10,23 @@ module Riker
 
     StackItem = Struct.new(:name, :type, :item)
 
-    class << self
-      def stack
-        @stack ||= []
-      end
+    def self.stack
+      @stack ||= []
+    end
 
-      def group(name, &block)
-        unless stack.any? { |s| s.type == :group && s.name == name }
-          group = CLI::Group.new(name)
-          group.instance_eval(&block) if block_given?
-          stack << StackItem.new(name, :group, group)
-          group
-        end
+    def self.find_stack_item(name, type)
+      if name && type
+        stack.detect { |s| s.type == type.to_sym && s.name = name.to_sym }
       end
+    end
 
+    def self.group(name, &block)
+      unless stack.any? { |s| s.type == :group && s.name == name }
+        group = CLI::Group.new(name)
+        group.instance_eval(&block) if block_given?
+        stack << StackItem.new(name, :group, group)
+        group
+      end
     end
 
     attr_reader :parser
@@ -32,7 +35,10 @@ module Riker
       @command    = argv.shift
       @subcommand = argv.shift unless argv.first.to_s.match(/^--/)
       @argv       = argv
-      @parser     = CLI::Parser.new
+    end
+
+    def parser
+      @parser ||= CLI::Parser.new
     end
 
     # Dispatches the CLI
@@ -44,7 +50,7 @@ module Riker
     end
 
     def to_s
-      @parser.to_s
+      parser.to_s
     end
   end
 end

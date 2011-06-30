@@ -18,6 +18,16 @@ describe Riker::CLI do
     it { @cli.class.stack.should be_an Array }
   end
 
+  describe "::find_stack_item" do
+    it "returns a group from ::stack" do
+      @cli.class.group :locks
+      group = @cli.class.find_stack_item(:locks, :group)
+      group.should equal @cli.class.stack.last
+    end
+
+    it "returns a command from ::stack"
+  end
+
   describe "::group" do
     it "appends the group to ::stack" do
       expect do
@@ -41,11 +51,6 @@ describe Riker::CLI do
       @cli.instance_variable_get(:@subcommand).should == 'load'
     end
 
-    it "sets @parser" do
-      @cli.instance_variable_get(:@parser).should be_a Riker::CLI::Parser
-    end
-
-    it "sets @parser.program_name"
 
     it "sets @argv" do
       argv = @cli.instance_variable_get(:@argv)
@@ -59,9 +64,14 @@ describe Riker::CLI do
   end
 
   describe "#to_s" do
-    it "delegates to @parser.to_s" do
+    it "delegates to parser.to_s" do
       @cli.to_s.should == @cli.parser.to_s
     end
   end
 
+  describe "#parser" do
+    it { @cli.parser.should be_a Riker::CLI::Parser }
+
+    it "sets @parser.program_name"
+  end
 end
