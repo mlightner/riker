@@ -50,7 +50,7 @@ module Riker
     end
 
     def to_s
-      parser.to_s
+      inspect
     end
   end
 end

@@ -19,20 +19,23 @@ module Riker
       @description = desc || @description
     end
 
-    def build_parser(opt)
+    def parser
+      @parser ||= CLI::Parser.new
+    end
+
+    def build_parser
       required = @switches.select { |name, switch| switch.required? }
       optional = @switches - required
 
       if required.size > 0
-        opt.separator "\nRequired parameters"
-        required.each { |name, switch| opt.on(*switch.to_opt) }
+        parser.separator "\nRequired parameters"
+        required.each { |name, switch| parser.on(*switch.to_opt) }
       end
 
       if optional.size > 0
-        opt.separator "\nOptional parameters"
-        optional.each { |name, switch| opt.on(*switch.to_opt) }
+        parser.separator "\nOptional parameters"
+        optional.each { |name, switch| parser.on(*switch.to_opt) }
       end
-      opt
     end
 
   end

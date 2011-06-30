@@ -64,14 +64,7 @@ describe Riker::CLI do
   end
 
   describe "#to_s" do
-    it "delegates to parser.to_s" do
-      @cli.to_s.should == @cli.parser.to_s
-    end
+    it "prints the CLI"
   end
 
-  describe "#parser" do
-    it { @cli.parser.should be_a Riker::CLI::Parser }
-
-    it "sets @parser.program_name"
-  end
 end

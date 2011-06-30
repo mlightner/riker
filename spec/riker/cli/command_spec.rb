@@ -45,6 +45,12 @@ describe Riker::CLI::Command do
     end
   end
 
+  describe "#parser" do
+    it { @cmd.parser.should be_a Riker::CLI::Parser }
+
+    it "sets @parser.program_name"
+  end
+
   describe "#build_parser" do
     it "builds the OptionParser" do
       @cmd.switch :id do
@@ -55,8 +61,8 @@ describe Riker::CLI::Command do
       end
 
       parser = OptionParser.new
-      @cmd.build_parser(parser)
-      output = parser.to_s
+      @cmd.build_parser
+      output = @cmd.parser.to_s
       output.should match /Required parameters/
       output.should match /--id ID/
     end
