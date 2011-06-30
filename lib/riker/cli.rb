@@ -20,8 +20,12 @@ module Riker
       end
     end
 
+    def self.group_exists?(name)
+      stack.any? { |s| s[:type] == :group && s[:name] == name }
+    end
+
     def self.group(name, &block)
-      unless stack.any? { |s| s[:type] == :group && s[:name] == name }
+      unless group_exists?(name)
         group = CLI::Group.new(name)
         group.instance_eval(&block) if block_given?
         stack << {

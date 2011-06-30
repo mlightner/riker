@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Riker::CLI do
+  before :all do
+    Riker::CLI.group :simulation
+  end
+
   before :each do
     @cli = Riker::CLI.new %w[simulation load picard1]
   end
@@ -9,11 +13,24 @@ describe Riker::CLI do
     it { @cli.class.stack.should be_an Array }
   end
 
+  describe "::group_exists?" do
+    it "returns true if the group exists in ::stack" do
+      @cli.class.group_exists?(:simulation).should == true
+    end
+
+    it "returns false if the group doesn't exist in ::stack" do
+      @cli.class.group_exists?(:ten_forward).should == false
+    end
+  end
+
   describe "::find_stack_item" do
     it "returns a group from ::stack" do
       @cli.class.group :locks
       group = @cli.class.find_stack_item(:locks, :group)
-      group.should equal @cli.class.stack.last
+      group.should be_a Hash
+      group[:name].should == :locks
+      group[:type].should == :group
+      group[:item].should be_a Riker::CLI::Group
     end
 
     it "returns a command from ::stack"
