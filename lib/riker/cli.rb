@@ -38,7 +38,7 @@ module Riker
       @subcommand = argv.shift unless argv.first.to_s.match(/^--/)
       @argv       = argv
 
-      instance_eval(&block) if block_given?
+      self.class.instance_eval(&block) if block_given?
     end
 
     # Dispatches the CLI
