@@ -8,7 +8,6 @@ module Riker
     autoload :Switch,  "riker/cli/switch"
     autoload :Parser,  "riker/cli/parser"
 
-    StackItem = Struct.new(:name, :type, :item)
 
     def self.stack
       @stack ||= []
@@ -16,15 +15,21 @@ module Riker
 
     def self.find_stack_item(name, type)
       if name && type
-        stack.detect { |s| s.type == type.to_sym && s.name = name.to_sym }
+        stack.detect do |s|
+          s[:type] == type.to_sym && s[:name] = name.to_sym
+        end
       end
     end
 
     def self.group(name, &block)
-      unless stack.any? { |s| s.type == :group && s.name == name }
+      unless stack.any? { |s| s[:type] == :group && s[:name] == name }
         group = CLI::Group.new(name)
         group.instance_eval(&block) if block_given?
-        stack << StackItem.new(name, :group, group)
+        stack << {
+          :name => name,
+          :type => :group,
+          :item => group
+        }
         group
       end
     end
@@ -35,10 +40,6 @@ module Riker
       @command    = argv.shift
       @subcommand = argv.shift unless argv.first.to_s.match(/^--/)
       @argv       = argv
-    end
-
-    def parser
-      @parser ||= CLI::Parser.new
     end
 
     # Dispatches the CLI

@@ -5,15 +5,6 @@ describe Riker::CLI do
     @cli = Riker::CLI.new %w[simulation load picard1]
   end
 
-  describe "::StackItem" do
-    before :all do
-      @item = Riker::CLI::StackItem.new
-    end
-    [:name, :type, :item].each do |k|
-      it { @item.should have_attr_accessor k }
-    end
-  end
-
   describe "::stack" do
     it { @cli.class.stack.should be_an Array }
   end
