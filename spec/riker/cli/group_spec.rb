@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe Riker::CLI::Group do
   before :each do
-    @group = Riker::CLI::Group.new(:hackers)
+    @group = Riker::CLI::Group.new(:simulation)
   end
 
   it { @group.should have_attr_reader :commands }
 
   describe "#initialize" do
     it "sets @name" do
-      @group.instance_variable_get(:@name).should == :hackers
+      @group.instance_variable_get(:@name).should == :simulation
     end
 
     it "sets @commands to an empty Array" do
@@ -20,13 +20,13 @@ describe Riker::CLI::Group do
   describe "#command" do
     it "appends a CLI::Command to @commands" do
       expect do
-        @group.command :ddos
+        @group.command :load
       end.to change { @group.commands.size }.by(1)
 
-      @group.command :ddos
-      cmd = @group.commands.assoc(:ddos)
+      @group.command :load
+      cmd = @group.commands.assoc(:load)
       cmd.should have(2).items
-      cmd[0].should == :ddos
+      cmd[0].should == :load
       cmd[1].should be_a Riker::CLI::Command
     end
   end

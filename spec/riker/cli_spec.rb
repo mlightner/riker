@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Riker::CLI do
   before :each do
-    @cli = Riker::CLI.new %w[delorean time_travel 1955]
+    @cli = Riker::CLI.new %w[simulation load picard1]
   end
 
   describe "::groups" do
@@ -12,38 +12,36 @@ describe Riker::CLI do
   describe "::group" do
     it "appends the group to ::groups" do
       expect do
-        @cli.class.group :ninjas
+        @cli.class.group :doors
       end.to change { @cli.class.groups.size }.by(1)
     end
 
     it "doesn't append if ::groups include group" do
       expect do
-        @cli.class.group :ninjas
+        @cli.class.group :doors
       end.to_not change { @cli.class.groups.size }
     end
   end
 
   describe "#initialize" do
     it "sets @command" do
-      @cli.instance_variable_get(:@command).should == 'delorean'
+      @cli.instance_variable_get(:@command).should == 'simulation'
     end
 
     it "sets @subcommand" do
-      @cli.instance_variable_get(:@subcommand).should == 'time_travel'
+      @cli.instance_variable_get(:@subcommand).should == 'load'
     end
 
     it "sets @parser" do
-      @cli.instance_variable_get(:@parser).should be_a OptionParser
+      @cli.instance_variable_get(:@parser).should be_a Riker::CLI::Parser
     end
 
-    it "sets @parser.program_name", :pending => true do
-      @cli.parser.program_name.should match /delorean time_travel/
-    end
+    it "sets @parser.program_name"
 
     it "sets @argv" do
       argv = @cli.instance_variable_get(:@argv)
       argv.should have(1).item
-      argv.first.should == '1955'
+      argv.first.should == 'picard1'
     end
   end
 

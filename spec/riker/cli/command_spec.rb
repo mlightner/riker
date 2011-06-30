@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe Riker::CLI::Command do
   before :each do
-    @cmd = Riker::CLI::Command.new(:test)
+    @cmd = Riker::CLI::Command.new(:load)
   end
 
   it { @cmd.should have_attr_reader :switches }
 
   describe "#initialize" do
     it "sets @name" do
-      @cmd.instance_variable_get(:@name).should == :test
+      @cmd.instance_variable_get(:@name).should == :load
     end
 
     it "sets @switches to an empty Array" do
@@ -22,14 +22,10 @@ describe Riker::CLI::Command do
   end
 
   describe "#switch" do
-    it "requires a block", :pending => true do
-      expect { @cmd.switch :test }.to raise_error /no block given/
-    end
-
     it "appends to @switches" do
       expect do
-        @cmd.switch :test do
-          label 'test'
+        @cmd.switch :simulation_id do
+          label 'Simulation ID'
         end
       end.to change { @cmd.switches.size }.by(1)
     end
@@ -37,13 +33,13 @@ describe Riker::CLI::Command do
 
   describe "#description" do
     it "sets @description with an argument" do
-      desc = "My Cool Prog"
+      desc = "The Holodeck"
       @cmd.description desc
       @cmd.instance_variable_get(:@description).should == desc
     end
 
     it "gets @description with no arguement" do
-      desc = "My Cooler Prog"
+      desc = "The Holodeck"
       @cmd.instance_variable_set(:@description, desc)
       @cmd.description.should == desc
     end
