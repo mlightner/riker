@@ -41,6 +41,14 @@ module Riker
       self.class.instance_eval(&block) if block_given?
     end
 
+    def group
+      @group ||= self.class.find_stack_item(@command, :group)
+    end
+
+    def group?
+      ! group.nil?
+    end
+
     # Dispatches the CLI
     #
     # Looks for a CLI group named @command, then

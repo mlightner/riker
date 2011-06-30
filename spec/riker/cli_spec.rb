@@ -58,4 +58,26 @@ describe Riker::CLI do
     it "prints the CLI"
   end
 
+  describe "#group" do
+    it "sets @group to a ::stack item" do
+      group = @cli.group
+      group.should be_a Hash
+      group[:type].should == :group
+      group[:name].should == :simulation
+      group[:item].should be_a Riker::CLI::Group
+    end
+  end
+
+  describe "#group?" do
+    it "returns true if @group" do
+      @cli.group?.should == true
+    end
+
+    it "returns false if @group.nil?" do
+      @cli.instance_variable_set(:@group, nil)
+      @cli.instance_variable_set(:@command, nil)
+      @cli.group?.should == false
+    end
+  end
+
 end
