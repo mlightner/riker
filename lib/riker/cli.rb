@@ -8,7 +8,6 @@ module Riker
     autoload :Switch,  "riker/cli/switch"
     autoload :Parser,  "riker/cli/parser"
 
-
     def self.stack
       @stack ||= []
     end
@@ -33,8 +32,6 @@ module Riker
         group
       end
     end
-
-    attr_reader :parser
 
     def initialize(argv = [])
       @command    = argv.shift

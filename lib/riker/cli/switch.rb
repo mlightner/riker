@@ -18,10 +18,6 @@ module Riker
       @type = type || @type
     end
 
-    def key(key = nil)
-      @key = key || @key
-    end
-
     def block(block = nil)
       @block = block || @block
     end
