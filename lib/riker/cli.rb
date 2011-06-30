@@ -8,16 +8,18 @@ module Riker
     autoload :Switch,  "riker/cli/switch"
     autoload :Parser,  "riker/cli/parser"
 
+    StackItem = Struct.new(:name, :type, :item)
+
     class << self
-      def groups
-        @groups ||= []
+      def stack
+        @stack ||= []
       end
 
       def group(name, &block)
-        unless groups.assoc(name)
+        unless stack.any? { |s| s.type == :group && s.name == name }
           group = CLI::Group.new(name)
           group.instance_eval(&block) if block_given?
-          groups << [name, group]
+          stack << StackItem.new(name, :group, group)
           group
         end
       end
