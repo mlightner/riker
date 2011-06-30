@@ -31,18 +31,8 @@ describe Riker::CLI::Switch do
     end
   end
 
-  describe "#flag" do
-    it "gets @flag with no argument"
-    it "sets @flag with an argument"
-  end
+  it { @switch.should get_or_set :flag }
+  it { @switch.should get_or_set :label }
+  it { @switch.should get_or_set :type }
 
-  describe "#label" do
-    it "gets @label with no argument"
-    it "sets @label with an argument"
-  end
-
-  describe "#type" do
-    it "gets @type with no argument"
-    it "sets @type with an argument"
-  end
 end
