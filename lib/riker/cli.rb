@@ -33,10 +33,12 @@ module Riker
       end
     end
 
-    def initialize(argv = [])
+    def initialize(argv = ARGV.dup, &block)
       @command    = argv.shift
       @subcommand = argv.shift unless argv.first.to_s.match(/^--/)
       @argv       = argv
+
+      instance_eval(&block) if block_given?
     end
 
     # Dispatches the CLI
