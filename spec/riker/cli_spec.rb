@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Riker::CLI do
   before :all do
     Riker::CLI.group :simulation
+    Riker::CLI.command :status
   end
 
   before :each do
@@ -23,17 +24,32 @@ describe Riker::CLI do
     end
   end
 
+  describe "::command_exists?" do
+    it "returns true if the command exists in ::stack" do
+      @cli.class.command_exists?(:status).should == true
+    end
+
+    it "returns false if the command doesn't exist in ::stack" do
+      @cli.class.command_exists?(:self_destruct).should == false
+    end
+  end
+
   describe "::find_stack_item" do
     it "returns a group from ::stack" do
-      @cli.class.group :locks
-      group = @cli.class.find_stack_item(:locks, :group)
+      group = @cli.class.find_stack_item(:simulator, :group)
       group.should be_a Hash
-      group[:name].should == :locks
+      group[:name].should == :simulator
       group[:type].should == :group
       group[:item].should be_a Riker::CLI::Group
     end
 
-    it "returns a command from ::stack"
+    it "returns a command from ::stack" do
+      command = @cli.class.find_stack_item(:status, :command)
+      command.should be_a Hash
+      command[:name].should == :status
+      command[:type].should == :command
+      command[:item].should be_a Riker::CLI::Command
+    end
   end
 
   describe "::group" do

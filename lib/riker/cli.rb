@@ -37,6 +37,23 @@ module Riker
       end
     end
 
+    def self.command_exists?(name)
+      stack.any? { |s| s[:type] == :command && s[:name] == name }
+    end
+
+    def self.command(name, &block)
+      unless command_exists?(name)
+        command = CLI::Command.new(name)
+        command.instance_eval(&block) if block_given?
+        stack << {
+          :name => name,
+          :type => :command,
+          :item => command,
+        }
+        command
+      end
+    end
+
     def initialize(argv = ARGV.dup, &block)
       @command    = argv.shift
       @subcommand = argv.shift unless argv.first.to_s.match(/^--/)
