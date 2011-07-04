@@ -1,6 +1,9 @@
 module Riker
   class CLI::Command
+    include CLI::DSL
     attr_reader :switches
+    attr_setter :description
+    attr_setter :action
 
     def initialize(name)
       @name     = name
@@ -15,12 +18,18 @@ module Riker
       switch
     end
 
-    def description(desc = nil)
-      @description = desc || @description
-    end
-
     def parser
       @parser ||= CLI::Parser.new
+    end
+
+    def run_action!
+      if action && action.respond_to?(:call)
+        if action.parameters.size > 0
+          action.call(@options)
+        else
+          action.call
+        end
+      end
     end
 
     def build_parser

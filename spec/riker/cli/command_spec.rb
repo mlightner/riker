@@ -31,20 +31,6 @@ describe Riker::CLI::Command do
     end
   end
 
-  describe "#description" do
-    it "sets @description with an argument" do
-      desc = "The Holodeck"
-      @cmd.description desc
-      @cmd.instance_variable_get(:@description).should == desc
-    end
-
-    it "gets @description with no argument" do
-      desc = "The Holodeck"
-      @cmd.instance_variable_set(:@description, desc)
-      @cmd.description.should == desc
-    end
-  end
-
   describe "#parser" do
     it { @cmd.parser.should be_a Riker::CLI::Parser }
 
@@ -65,6 +51,20 @@ describe Riker::CLI::Command do
       output = @cmd.parser.to_s
       output.should match /Required parameters/
       output.should match /--id ID/
+    end
+  end
+
+  describe "#run_action!" do
+    before :each do
+      $stdout.should_receive(:puts)
+    end
+    it "runs the action with param" do
+      @cmd.action(lambda {|opt| puts "Hello" })
+      @cmd.run_action!
+    end
+    it "runs the action with no param" do
+      @cmd.action(lambda {puts "Hello" })
+      @cmd.run_action!
     end
   end
 end

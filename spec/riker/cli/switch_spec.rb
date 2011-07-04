@@ -6,6 +6,10 @@ describe Riker::CLI::Switch do
   end
 
   it { @switch.should have_attr_reader :name }
+  it { @switch.should get_or_set :flag }
+  it { @switch.should get_or_set :label }
+  it { @switch.should get_or_set :type }
+  it { @switch.should get_or_set :action }
 
   describe "#initialize" do
     it "sets @name" do
@@ -30,9 +34,5 @@ describe Riker::CLI::Switch do
       @switch.required?.should == false
     end
   end
-
-  it { @switch.should get_or_set :flag }
-  it { @switch.should get_or_set :label }
-  it { @switch.should get_or_set :type }
 
 end

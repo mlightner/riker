@@ -7,7 +7,6 @@ describe Riker::CLI::Group do
 
   it { @group.should have_attr_reader :commands }
   it { @group.should get_or_set :help }
-  it { @group.should get_or_set :driver }
 
   describe "#initialize" do
     it "sets @name" do
@@ -33,18 +32,15 @@ describe Riker::CLI::Group do
     end
   end
 
-  describe "#try_command" do
-    before :each do
-      @group.driver TestDriver.new
+  describe "#command_exists?" do
+    context "with valid command" do
+      it do
+        @group.command :load
+        @group.command_exists?(:load).should == true
+      end
     end
-
-    it "runs runs the command if driver responds to cmd" do
-      @group.try_command(:say_my_name).should == :test_driver
-    end
-
-    it "returns false if driver does not respond to cmd" do
-      @group.try_command(:i_am_not_a_method).should == false
+    context "with invalid command" do
+      it { @group.command_exists?(:not_a_command).should == false }
     end
   end
-
 end

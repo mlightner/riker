@@ -1,25 +1,14 @@
 module Riker
   class CLI::Switch
+    include CLI::DSL
     attr_reader :name
+    attr_setter :flag
+    attr_setter :label
+    attr_setter :type
+    attr_setter :action
 
     def initialize(name)
       @name = name
-    end
-
-    def flag(flag = nil)
-      @flag = flag || @flag
-    end
-
-    def label(label = nil)
-      @label = label || @label
-    end
-
-    def type(type = nil)
-      @type = type || @type
-    end
-
-    def block(block = nil)
-      @block = block || @block
     end
 
     def required
@@ -32,10 +21,10 @@ module Riker
 
     def to_opt
       [].tap do |a|
-        a << flag  if flag
-        a << label if label
-        a << type  if type
-        a << block if block
+        a << flag   if flag
+        a << label  if label
+        a << type   if type
+        a << action if action
       end
     end
   end

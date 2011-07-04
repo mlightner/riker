@@ -1,6 +1,8 @@
 module Riker
   class CLI::Group
+    include CLI::DSL
     attr_reader :commands
+    attr_setter :help
 
     def initialize(name)
       @name     = name
@@ -14,20 +16,9 @@ module Riker
       command
     end
 
-    def driver(driver = nil)
-      @driver = driver || @driver
+    def command_exists?(name)
+      !! @commands.assoc(name)
     end
 
-    def help(help = nil)
-      @help = help || @help
-    end
-
-    def try_command(cmd, argv = [])
-      if driver.respond_to?(cmd)
-        driver.send(cmd, argv)
-      else
-        false
-      end
-    end
   end
 end

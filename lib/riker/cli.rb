@@ -3,6 +3,7 @@ require 'riker/exceptions'
 
 module Riker
   class CLI
+    autoload :DSL,     "riker/cli/dsl"
     autoload :Group,   "riker/cli/group"
     autoload :Command, "riker/cli/command"
     autoload :Switch,  "riker/cli/switch"
