@@ -50,9 +50,3 @@ RSpec::Matchers.define :get_or_set do |attribute|
     "get or set @#{attribute} with ##{attribute}"
   end
 end
-
-class TestDriver
-  def say_my_name(*args)
-    :test_driver
-  end
-end
