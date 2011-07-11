@@ -1,6 +1,6 @@
 $:.unshift 'lib'
 
-require 'riker/version'
+require 'riker'
 
 Gem::Specification.new do |s|
   s.platform   = Gem::Platform::RUBY
@@ -15,8 +15,6 @@ Gem::Specification.new do |s|
   s.files      = %w[ Rakefile README.markdown ]
   s.files     += Dir['lib/**/*']
   s.files     += Dir['spec/**/*']
-
-  # s.add_dependency('gem', '= 0.0.0')
 
   s.add_development_dependency('rspec', '~> 2.6')
   s.add_development_dependency('rake',  '~> 0.8.7')
