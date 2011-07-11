@@ -32,11 +32,25 @@ describe Riker do
       Riker.new { opt = options }
       opt.should == @riker.options
     end
+    it "sets @argv" do
+      @riker.instance_variable_get(:@argv).should be_an Array
+    end
+    it "sets @_lets" do
+      @riker.instance_variable_get(:@_lets).should be_a Hash
+    end
   end
 
   describe "#options" do
     it "should be a hash" do
       @riker.options.should be_a Hash
+    end
+  end
+
+  describe "#let" do
+    it "should set @_lets[key] = block" do
+      blk = lambda { :holodeck }
+      @riker.let(:cmd, &blk)
+      @riker.instance_variable_get(:@_lets)[:cmd].should eql(blk)
     end
   end
 
@@ -92,6 +106,34 @@ describe Riker do
   describe "#option_parser" do
     it "should be an OptionParser" do
       @riker.instance_eval('option_parser').should be_an OptionParser
+    end
+  end
+
+  describe "#respond_to" do
+    before :each do
+      @riker.let(:cmd) { :holodeck }
+    end
+
+    it "should return true if value from @_lets exists" do
+      @riker.respond_to?(:cmd).should == true
+    end
+
+    it "should return false if the value doesn't exist in @_lets" do
+      @riker.respond_to?(:i_am_fake).should == false
+    end
+  end
+
+  describe "#method_missing" do
+    before :each do
+      @riker.let(:cmd) { :holodeck }
+    end
+
+    it "should return value from @_lets if it exists" do
+      @riker.cmd.should == :holodeck
+    end
+
+    it "should raise NoMethodError @_lets doesn't include value" do
+      expect { @riker.i_am_fake }.to raise_error NoMethodError
     end
   end
 

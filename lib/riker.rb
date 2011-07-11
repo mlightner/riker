@@ -49,16 +49,23 @@ class Riker
 
   include DSL
 
-  def initialize(&block)
+  def initialize(argv = ARGV, &block)
+    @argv = ARGV.dup
+    @_lets ||= {}
     instance_eval(&block) if block_given?
+    parse
   end
 
   def options
     @options ||= {}
   end
 
-  def parse(argv)
-    argv_in, argv_out = argv.dup, []
+  def let(key, &block)
+    @_lets[key] = block
+  end
+
+  def parse(argv = nil)
+    argv_in, argv_out = (argv || @argv).dup, []
 
     until argv_in.empty? or cmd = find_command(*argv_in)
       argv_out.unshift argv_in.pop
@@ -89,4 +96,20 @@ class Riker
     @option_parser ||= OptionParser.new
   end
   protected :option_parser
+
+  def respond_to?(sym, include_priv = false)
+    super || @_lets.has_key?(sym)
+  end
+
+  def method_missing(sym, *args, &block)
+    if @_lets.has_key?(sym)
+      if @_lets[sym].respond_to?(:call)
+        @_lets[sym].call
+      else
+        @_lets[sym]
+      end
+    else
+      super
+    end
+  end
 end
