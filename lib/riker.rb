@@ -13,6 +13,25 @@ class Riker
       command
     end
     protected :command
+
+    def parser_stack
+      @parser_stack ||= []
+    end
+    protected :parser_stack
+
+    def parser(&block)
+      if block_given?
+        parser_stack << block
+      end
+      option_parser
+    end
+
+    def build_parser!
+      parser_stack.each do |block|
+        block.call(option_parser)
+      end
+      option_parser
+    end
   end
 
   class Command
@@ -25,13 +44,9 @@ class Riker
       @parent = parent
     end
 
-    def parser(&block)
-      @parser = block if block_given?
-    end
-
-    def run!
-      parent.run! if parent.respond_to?(:run!)
-      @parser.call(option_parser) if @parser
+    def build!
+      parent.build! if parent.respond_to?(:build!)
+      build_parser!
     end
 
     def respond_to?(sym, include_priv = false)
@@ -71,7 +86,7 @@ class Riker
       argv_out.unshift argv_in.pop
     end
 
-    cmd.run! if cmd
+    cmd.build! if cmd
 
     argv_out
   end

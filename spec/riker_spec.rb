@@ -169,25 +169,15 @@ describe Riker do
       end
     end
 
-    describe "#parser" do
-      it "sets @parser" do
-        blk = lambda { |p| p.banner = 'riker test' }
-        @cmd.parser &blk
-        @cmd.instance_variable_get(:@parser).should eql(blk)
-      end
-    end
-
-    describe "#run!" do
-      it "runs @parent.parser" do
-        @cmd.parent.should_receive(:run!)
-        @cmd.run!
+    describe "#build!" do
+      it "runs @parent.build!" do
+        @cmd.parent.should_receive(:build!)
+        @cmd.build!
       end
 
-      it "calls @parser" do
-        @cmd.instance_variable_get(:@parser).
-          should_receive(:call).
-          with(@riker.instance_eval('option_parser'))
-        @cmd.run!
+      it "calls build_parser!" do
+        @cmd.should_receive(:build_parser!)
+        @cmd.build!
       end
     end
 
