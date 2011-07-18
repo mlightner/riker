@@ -196,5 +196,22 @@ describe Riker do
         expect { @cmd.open_holodeck }.to raise_error NoMethodError
       end
     end
+
+    describe "#action" do
+      it "sets @action" do
+        act = lambda { :action }
+        @cmd.action(&act)
+        @cmd.instance_variable_get(:@action).should eql(act)
+      end
+    end
+
+    describe "#run_action!" do
+      it "calls @action" do
+        act = lambda { :action }
+        @cmd.action(&act)
+        @cmd.instance_variable_get(:@action).should_receive(:call)
+        @cmd.run_action!
+      end
+    end
   end
 end

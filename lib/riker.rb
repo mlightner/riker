@@ -60,6 +60,14 @@ class Riker
         super
       end
     end
+
+    def action(&block)
+      @action = block if block_given?
+    end
+
+    def run_action!
+      @action.call(self) if @action && @action.respond_to?(:call)
+    end
   end
 
   include DSL
