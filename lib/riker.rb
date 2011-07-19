@@ -70,6 +70,19 @@ class Riker
     end
   end
 
+  class Parser < OptionParser
+    def required_switches
+      @required_switches ||= []
+    end
+
+    def required(key, *args, &block)
+      unless required_switches.include?(key)
+        required_switches << key
+        on(*args, &block)
+      end
+    end
+  end
+
   include DSL
 
   def initialize(argv = ARGV, &block)
@@ -129,7 +142,7 @@ class Riker
   protected :current_command
 
   def option_parser
-    @option_parser ||= OptionParser.new
+    @option_parser ||= Parser.new(:auto)
   end
   protected :option_parser
 

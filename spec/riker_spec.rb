@@ -165,6 +165,34 @@ describe Riker do
     end
   end
 
+  context "::Parser" do
+    before do
+      @parser = Riker::Parser.new
+    end
+
+    it { Riker::Parser.should be < OptionParser }
+
+    describe "#required_switches" do
+      it "sets @required_switches to an Array" do
+        @parser.required_switches.should be_an Array
+        @parser.required_switches.should == @parser.instance_variable_get(:@required_switches)
+      end
+    end
+
+    describe "#required" do
+      it "appends to #required_switches" do
+        expect do
+          @parser.required :foo, '--foo'
+        end.to change { @parser.required_switches.size }.by(1)
+      end
+
+      it "calls #on" do
+        @parser.should_receive(:on)
+        @parser.required :foo, '--foo'
+      end
+    end
+  end
+
   context "::Command" do
     before do
       @cmd = @riker.instance_eval { find_command :holodeck }
