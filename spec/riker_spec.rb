@@ -213,6 +213,10 @@ describe Riker do
       it "sets @parent" do
         @cmd.instance_variable_get(:@parent).should eql(@riker)
       end
+
+      it "sets @action" do
+        @cmd.instance_variable_get(:@action).should be_a Proc
+      end
     end
 
     describe "#build!" do

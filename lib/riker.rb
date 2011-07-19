@@ -42,6 +42,7 @@ class Riker
     def initialize(id, parent)
       @id     = id
       @parent = parent
+      @action = lambda { puts parser }
     end
 
     def build!
