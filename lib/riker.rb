@@ -4,12 +4,10 @@ class Riker
   Version = VERSION = '0.0.0'
 
   module DSL
-    def command(name, &block)
-      current_command << name
-      command = Command.new(current_command.dup, self)
+    def command(name, desc = nil, &block)
+      command = Command.new(name, desc, self)
       command.instance_eval(&block)
       commands << command
-      current_command.delete(name)
       command
     end
     protected :command
@@ -37,12 +35,21 @@ class Riker
   class Command
     include DSL
 
-    attr_reader :id, :parent
+    attr_reader :name, :parent, :description
 
-    def initialize(id, parent)
-      @id     = id
-      @parent = parent
-      @action = lambda { puts parser }
+    def initialize(name, description, parent)
+      @name          = name
+      @parent      = parent
+      @description = description
+      @action      = lambda { puts parser }
+    end
+
+    def id
+      if parent.is_a?(Command)
+        parent.id << name
+      else
+        [name]
+      end
     end
 
     def build!
@@ -136,11 +143,6 @@ class Riker
     commands.find { |cmd| cmd.id == keys }
   end
   protected :find_command
-
-  def current_command
-    @current_command ||= []
-  end
-  protected :current_command
 
   def option_parser
     @option_parser ||= Parser.new(:auto)

@@ -115,12 +115,6 @@ describe Riker do
     end
   end
 
-  describe "#current_command" do
-    it "should be an Array" do
-      @riker.instance_eval('current_command').should be_an Array
-    end
-  end
-
   describe "#option_parser" do
     it "should be an OptionParser" do
       @riker.instance_eval('option_parser').should be_an OptionParser
@@ -200,14 +194,15 @@ describe Riker do
 
     it { @cmd.should have_attr_reader :id }
     it { @cmd.should have_attr_reader :parent }
+    it { @cmd.should have_attr_reader :name }
 
     it "should include DSL" do
       Riker::Command.should include Riker::DSL
     end
 
     describe "#initialize" do
-      it "sets @id" do
-        @cmd.instance_variable_get(:@id).should == [:holodeck]
+      it "sets @parent" do
+        @cmd.instance_variable_get(:@name).should == :holodeck
       end
 
       it "sets @parent" do
@@ -216,6 +211,12 @@ describe Riker do
 
       it "sets @action" do
         @cmd.instance_variable_get(:@action).should be_a Proc
+      end
+    end
+
+    describe "#id" do
+      it "returns the id" do
+        @cmd.id.should == [:holodeck]
       end
     end
 
