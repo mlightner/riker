@@ -99,6 +99,19 @@ class Riker
     argv_out
   end
 
+  def find_commands(*keys)
+    if keys.nil? || keys.empty?
+      out = commands.reverse.select { |cmd| cmd.id.length == 1 }.uniq
+    else
+      out = commands.reverse.select do |cmd|
+        if cmd.id.length > keys.length
+          keys == cmd.id.slice(0, keys.length)
+        end
+      end
+    end
+    out unless out.empty?
+  end
+
   def commands
     @commands ||= []
   end

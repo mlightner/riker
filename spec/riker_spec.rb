@@ -67,6 +67,24 @@ describe Riker do
     end
   end
 
+  describe "#find_commands" do
+    context "with valid keys" do
+      it "returns an array of commands" do
+        cmds = @riker.instance_eval { find_commands :holodeck }
+        cmds.should be_an Array
+        cmds.should have(1).item
+        cmds.first.should eql(@riker.instance_eval { find_command :holodeck, :doors })
+      end
+    end
+
+    context "with invalid keys" do
+      it "returns nil" do
+        @riker.instance_eval { find_commands :replicator }.should be_nil
+        @riker.instance_eval { find_commands :holodeck, :lights }.should be_nil
+      end
+    end
+  end
+
   describe "#find_command" do
     context "with invalid key" do
       it "returns nil" do
